@@ -1,0 +1,12 @@
+.form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .formInput {
+      text-align: left;
+    label, Field, .errorMessage {
+        height: 40px;
+        display: block;
+      }
+    }
+  }

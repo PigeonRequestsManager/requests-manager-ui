@@ -1,0 +1,27 @@
+.editorSelector {
+    margin-inline: 10px;
+}
+.method,
+.endpoint {
+    font-weight: 400;
+    font-size: 25px;
+    display: inline-block;
+}
+.endpoint {
+    width: 70%;
+    border: none;
+    padding: 10px 1px;
+    border-bottom: 1px solid $primary;
+    margin-left: 40px;
+    color: $primary;
+    background: none;
+}
+.method {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: none;
+    color: $primary;
+    border: none;
+    width: 20%;
+}

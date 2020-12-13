@@ -1,0 +1,52 @@
+@import "./colors";
+
+hr {
+    height: 2px;
+    border-width: 0;
+    background-color: $secondary;
+}
+
+.codeEditor {
+    flex-direction: column;
+    width: 70%;
+    margin: 10px 10%;
+    font-size: 20px;
+    .editorTop {
+        margin-bottom: 15px;
+        width: 100%;
+        justify-content: baseline;
+    }
+    .actions {
+        margin: 20px;
+        text-align: right;
+        button {
+            cursor: pointer;
+        }
+        .flashing {
+            animation: flash 0.6s;
+        }
+
+        @keyframes flash {
+            0% {
+                border-color: none;
+            }
+            5%,
+            25% {
+                border-color: $light_logo;  
+            }
+            100% {
+                border-color: none;
+            }
+        }
+    }
+    textarea {
+        margin: 15px 0 0 0;
+        padding: 15px 10px;
+        height: 200px;
+        width: 100%;
+    }
+    hr {
+        height: 1px;
+        background-color: $logo;
+    }
+}

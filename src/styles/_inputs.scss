@@ -1,0 +1,38 @@
+@mixin input {
+    color: $primary;
+    border-width: 2px;
+    border-style: solid;
+    border-color: $logo;
+    background: none;
+    text-underline-offset: 7px;
+    &:focus {
+        outline: 2px solid $light_logo;
+    }
+    &.active {
+        text-decoration: underline $light_logo;
+    }
+}
+
+select{ 
+    @include input;
+    border: none;
+}
+input {
+    @include input;
+    padding: 8px 12px;
+}
+input[type="submit"],
+button {
+    @include input;
+    cursor: pointer;
+    padding: 10px 30px;
+}
+
+textarea {
+    @include input;
+    resize: none;
+    font-size: 16px;
+    white-space: pre-wrap;
+    border-color: $primary;
+    background: $background;
+}

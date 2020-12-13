@@ -1,19 +1,49 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import Home from '../views/Home.vue'
+import { createRouter, createWebHistory, NavigationGuardNext, RouteLocationNormalized, RouteRecordRaw } from 'vue-router'
+import Login from 'views/Login.vue'
+import Dashboard from 'views/Dashboard.vue'
+import Account from 'views/Account.vue'
+import Cookies from 'universal-cookie'
 
-const routes: Array<RouteRecordRaw> = [
+function guard (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext, afterAuth = true) {
+  const cookies = new Cookies()
+  const token: boolean = cookies.get('authToken')
+  if (afterAuth) {
+    if (token) {
+      next()
+    } else {
+      next({ name: 'Login' })
+    }
+  } else {
+    if (!token) {
+      next()
+    }
+  }
+}
+
+export const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
+    name: 'Login',
+    component: Login,
+    beforeEnter (to, from, next) {
+      guard(to, from, next, false)
+    }
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: Dashboard,
+    beforeEnter (to, from, next) {
+      guard(to, from, next)
+    }
+  },
+  {
+    path: '/account',
+    name: 'Account',
+    component: Account,
+    beforeEnter (to, from, next) {
+      guard(to, from, next)
+    }
   }
 ]
 

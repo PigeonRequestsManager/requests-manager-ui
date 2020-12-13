@@ -18,6 +18,21 @@
     "paths": {
       "@/*": [
         "src/*"
+      ],
+      "views/*": [
+        "./src/views/*"
+      ],
+      "components/*": [
+        "./src/components/*"
+      ], 
+      "assets/*": [
+        "./src/assets/*"
+      ],
+      "router": [
+        "./src/router/index.ts"
+      ],
+      "api": [
+        "./src/api/wrapper.ts"
       ]
     },
     "lib": [
@@ -31,6 +46,7 @@
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
+    "src/**/*.scss",
     "tests/**/*.ts",
     "tests/**/*.tsx"
   ],

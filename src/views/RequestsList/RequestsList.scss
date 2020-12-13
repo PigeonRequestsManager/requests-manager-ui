@@ -1,0 +1,84 @@
+@import "src/styles/colors";
+li {
+    list-style: none;
+}
+
+hr {
+    height: 2px;
+    border-width: 0;
+    background-color: $secondary;
+}
+
+.foldersList {
+    width: 420px;
+    height: 70vh;
+    padding: 5px 5px;
+    overflow: hidden;
+    overflow-y: scroll;
+    ul {
+        margin: 0;
+        padding: 10px;
+    }
+}
+.folder {
+    margin-top: 20px;
+    width: 380px;
+    justify-content: center;
+    .folderName {
+        height: 50px;
+        input,
+        button {
+            display: inline-block;
+        }
+        input {
+            width: 50%;
+            font-size: 23px;
+            border: none;
+            color: $primary;
+            background: none;
+        }
+        button {
+            width: 30px;
+            border: none;
+            padding: none;
+            float: right;
+            text-align: right;
+            padding: 10px;
+            cursor: pointer;
+        }
+    }
+}
+
+.requestsList {
+    font-weight: 500;
+    font-size: 16px;
+    hr {
+        height: 1px;
+        background-color: $logo;
+    }
+    .request {
+        width: 330px;
+        margin: 20px 0px;
+        cursor: grab;
+        .method,
+        .endpoint,
+        .point {
+            text-align: left;
+            display: inline-block;
+            padding: 5px;
+        }
+        .method {
+            width: 70px;
+        }
+        .endpoint {
+            width: 200px;
+        }
+        .point {
+            background: $light_logo;
+            text-align: center;
+            font-size: 12px;
+            width: 40px;
+            border-radius: 5px;
+        }
+    }
+}
