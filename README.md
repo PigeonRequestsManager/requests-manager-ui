@@ -1,31 +1,19 @@
-# Pigeeon Requests manager UI
+# Pigeon Requests manager UI
 
-## Vue documentation
+This is Pigeon Requests Manager UI.
 
-### Project setup
+**For installation guide of Pigeon Requests Manager - go to: 
+[Pigeon Requests Manager API](https://github.com/PigeonRequestsManager/API "Pigeon Requests Manager API")**
 
-```
-npm install
-```
+<br>
 
-### Compiles and hot-reloads for development
+### Vue documentation
+Project setup: `npm install`
 
-```
-npm run serve
-```
+Compiles and hot-reloads for development:  `npm run serve`
 
-### Compiles and minifies for production
+Compiles and minifies for production: `npm run build`
 
-```
-npm run build
-```
+Lints and fixes files: `npm run lint`
 
-### Lints and fixes files
-
-```
-npm run lint
-```
-
-### Customize configuration
-
-See [Configuration Reference](https://cli.vuejs.org/config/).
+[Vue v3 documentation](https://v3.vuejs.org/guide/introduction.html)
