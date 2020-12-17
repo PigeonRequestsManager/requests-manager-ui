@@ -8,7 +8,7 @@
     display: inline-block;
 }
 .endpoint {
-    width: 70%;
+    width: 65%;
     border: none;
     padding: 10px 1px;
     border-bottom: 1px solid $primary;
@@ -24,4 +24,13 @@
     color: $primary;
     border: none;
     width: 20%;
+}
+.actions {
+    margin-inline: 20px;
+}
+.deleteButton {
+    border: none;
+    padding: 10px 13px;
+    margin-left: 25px;
+    display: inline-block;
 }

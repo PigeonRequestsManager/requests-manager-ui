@@ -1,58 +1,26 @@
-import axios from 'axios'
 import Cookies from 'universal-cookie'
 import { MethodsType, DataObject } from 'components/sharedInterfaces'
 import { AnyObject } from 'yup/lib/types'
 
 const API_ENDPOINT = 'piegon_api_url'
 
-export const getBearer = async () => {
+const getBearerToken = async () => {
   try {
     const cookies = new Cookies()
     const sessionToken = cookies.get('authToken')
     if (sessionToken !== null && sessionToken !== undefined) {
-      const bearer = 'Bearer ' + sessionToken
-      return bearer
+      return { Authorization: 'Bearer ' + sessionToken }
+    } else {
+      return {}
     }
   } catch (error) {
-    return undefined
-  }
-}
-
-export const getBearerToken = async () => {
-  const bearer = await getBearer()
-  if (bearer) {
-    return { Authorization: bearer }
-  } else {
     return {}
   }
 }
 
-const ErrorLogger = (errResponse: {request: {responseURL: string; status: string; _response: object; _method: string}; config: {method: string; data: object}}) => {
-  const endpoint = errResponse.request.responseURL.replace(API_ENDPOINT, '')
-
-  console.log('----------------')
-
-  console.log(`${errResponse.config.method} error - status ${errResponse.request.status} `)
-  console.log(`${errResponse.config.method} /${endpoint}`)
-
-  // If data object is attached to request
-  if (errResponse.config.data) {
-    const response: string = JSON.stringify(errResponse.config.data, null, 2)
-    console.log('DATA SENT: \n' + response)
-  }
-
-  // Server response
-  if (errResponse.request._response) {
-    const response: string = JSON.stringify(errResponse.request._response, null, 2)
-    console.log(`${errResponse.request._method} returned: \n` + response)
-  }
-
-  console.log('----------------')
-}
-
 interface HTTPFunctions {
   endpoint: string;
-  data?: DataObject;
+  data?: DataObject | undefined;
   contentType?: 'application/json';
 }
 
@@ -63,42 +31,71 @@ export interface HTTPResponse {
   status: number;
 }
 
-const axiosMethod = (method: HTTPMethods, parameters: { endpoint: HTTPFunctions['endpoint']; data?: HTTPFunctions['data']; config: object }) => {
-  switch (method) {
-    case 'POST':
-      return axios.post(
-        parameters.endpoint,
-        parameters.data,
-        parameters.config
-      )
-    case 'GET':
-      return axios.get(
-        parameters.endpoint,
-        parameters.config
-      )
-    case 'DELETE':
-      return axios.delete(
-        parameters.endpoint,
-        parameters.config
-      )
-    case 'PATCH':
-      return axios.patch(
-        parameters.endpoint,
-        parameters.data,
-        parameters.config
-      )
-    default:
-      return ({ data: {}, status: 503 })
+const parseData = async (response: any, headers: DataObject) => {
+  const responseBlob = response.clone()
+  const responseText = await response.text()
+  try {
+    const data = JSON.parse(responseText)
+    return data
+  } catch (error) {
+    console.log('Cant parse response body to json')
+    if (headers['content-type'] === 'image/png') {
+      const blob = await responseBlob.blob()
+      const data = URL.createObjectURL(blob)
+      return data
+    } else {
+      return responseText
+    }
   }
 }
 
+const fetchMethod = (endpoint: HTTPFunctions['endpoint'], fetchConfig: DataObject, timeout = 5000) => {
+  const controller = new AbortController()
+  const signal = controller.signal
+  fetchConfig.signal = signal
+  setTimeout(() => {
+    controller.abort()
+  }, timeout)
+  const result = fetch(endpoint, fetchConfig)
+    .then((response) => {
+      console.log(response)
+      if (response.ok) {
+        return response
+      } else {
+        return response
+      }
+    })
+    .then(async (response) => {
+      const responseJson: DataObject = {}
+      responseJson.status = response.status
+      responseJson.statusText = response.statusText
+      responseJson.headers = Object.fromEntries(response.headers.entries())
+      if (response.body !== null && response.body !== undefined) {
+        responseJson.data = await parseData(response, responseJson.headers)
+      }
+      return responseJson
+    }
+    )
+    .catch((err) => {
+      console.log('error on fetch', err)
+      const res = {
+        status: 503,
+        statusText: 'Service Unavailable'
+      }
+      return res
+    })
+  return result
+}
+
 const SendHTTPrequest = async (
-  method: HTTPMethods,
   endpoint: HTTPFunctions['endpoint'],
+  method: HTTPMethods,
   contentType: HTTPFunctions['contentType'] = 'application/json',
-  data: HTTPFunctions['data'] = {},
+  data: HTTPFunctions['data'] = undefined,
+  // Predefined data
+  predefinedHeaders?: DataObject,
   predefinedUrl?: string,
-  predefinedHeaders?: DataObject) => {
+  timeout?: number) => {
   let url
   if (predefinedUrl) {
     url = predefinedUrl
@@ -114,35 +111,18 @@ const SendHTTPrequest = async (
     allHeaders['Content-Type'] = contentType
   }
 
-  const parameters = {
-    endpoint: url,
-    data: data,
-    config: { headers: allHeaders }
+  const fetchConfig: any = {}
+  fetchConfig.headers = allHeaders
+  fetchConfig.method = method
+  if (method !== 'GET' && data !== undefined) {
+    fetchConfig.body = JSON.stringify(data)
   }
 
   try {
-    const response = await axiosMethod(method, parameters)
-    return response
+    const result = await fetchMethod(url, fetchConfig, timeout)
+    return result
   } catch (error) {
-    if (!error.response) {
-      error.response = {
-        status: 503
-      }
-    }
-    ErrorLogger(error)
-    if (error.response.status === 401) {
-      // Unauthorized
-    }
-    if (error.response.status === 405) {
-      // Method not allowed
-    }
-    if (error.response.status === 500) {
-      // Internal error
-    }
-    if (error.response.status === 503) {
-      // Service Unavailable
-    }
-    return error.response
+    return error
   }
 }
 

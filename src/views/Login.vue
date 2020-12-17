@@ -37,7 +37,6 @@ import Cookies from 'universal-cookie'
 
 import * as Yup from 'yup'
 import { Form, Field, ErrorMessage } from 'vee-validate'
-import route from 'router'
 
 import SendHTTPrequest from 'api'
 
@@ -50,6 +49,8 @@ import SendHTTPrequest from 'api'
 })
 
 export default class Login extends Vue {
+  showModal = false
+
   schema = {
     fields: [
       {
@@ -75,12 +76,11 @@ export default class Login extends Vue {
 
   private async onLogin (values: {}) {
     // Login to local PigeonAPI
-    const result = await SendHTTPrequest('POST', 'user_session', 'application/json', values)
+    const result = await SendHTTPrequest('user_session', 'POST', 'application/json', values)
     if (result.status === 201) {
       const cookies = new Cookies()
       cookies.set('authToken', result.data.session_token, { path: '/' })
-      console.log(result.data)
-      route.push('Dashboard')
+      this.$router.push('Dashboard')
     }
   }
 }

@@ -1,6 +1,6 @@
 .navigationBar {
     display: flex;
-    flex-direction: row; 
+    flex-direction: row;
     justify-content: space-between;
     height: 90px;
 
@@ -14,16 +14,20 @@
     }
 
     nav {
+        button {
+            border: none;
+            font-size: 15px;
+        }
         a {
             margin: 18px;
-            padding: 2px;
+            padding: 10px;
             display: inline-block;
             color: $primary;
             margin-inline: 40px;
-            text-decoration: none;
             &.router-link-exact-active {
-                text-underline-offset: 7px;
-                text-decoration: underline $light_logo;
+                div {
+                    text-decoration: underline $light_logo;
+                }
             }
         }
     }

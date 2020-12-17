@@ -1,4 +1,16 @@
 <template>
+  <vue-final-modal
+    v-model="showConfirm"
+    name="deleteConfirmationRequestEditor"
+  >
+    <ConfirmLayout
+      :on-cancel="closeDeleteRequestConfirm"
+      :on-confirm="deleteRequest"
+      :text="'Are you sure about deleting this request?'"
+      :confirm="'Yes'"
+      :cancel="'Cancel'"
+    />
+  </vue-final-modal>
   <div class="codeEditor">
     <h2>Edit request</h2>
     <!-- Method and endpoint editor -->
@@ -19,10 +31,14 @@
         v-model="request.endpoint"
         class="endpoint"
       >
-      <PhTrashSimple
-        :size="25"
-        style="margin-left: 25px"
-      />
+      <button
+        class="deleteButton"
+        @click="openDeleteRequestConfirm"
+      >
+        <PhTrashSimple
+          :size="24"
+        />
+      </button>
     </div>
     <!-- Editors selector -->
     <button
@@ -36,8 +52,8 @@
     </button>
     <!-- Actually edited json object -->
     <JsonEditor
-      :json-object="editedJson"
-      :update-json-object="updateJsonObject"
+      :provided-data="editedJson"
+      :update-provided-data="updateJsonObject"
     />
     <div class="actions">
       <button
@@ -45,7 +61,10 @@
         @animationend="animated = false"
         @click="sendRequest(request)"
       >
-        Send
+        Send from local client
+      </button>
+      <button disabled>
+        Send from remote server
       </button>
     </div>
 
@@ -63,6 +82,7 @@ import JsonEditor from 'components/JsonEditor.vue'
 import RequestResult from 'views/RequestResult/RequestResult.vue'
 import { PhTrashSimple } from 'phosphor-vue3'
 import SendHTTPrequest from 'api'
+import ConfirmLayout from 'components/ConfirmLayout.vue'
 
 const editorsDict = {
   headers: 'headers',
@@ -85,12 +105,14 @@ const EditorsArray = Object.keys(editorsDict) as EditorsType[]
   },
   components: {
     JsonEditor,
+    ConfirmLayout,
     RequestResult,
     PhTrashSimple
   }
 })
 
 export default class RequestEditor extends Vue {
+  showConfirm = false
   currentEditor: EditorsType = 'headers'
   methods = MethodsArray
   request!: Request
@@ -139,8 +161,20 @@ export default class RequestEditor extends Vue {
 
   async sendRequest (request: Request) {
     this.animated = true
-    const result = await SendHTTPrequest(request.method, request.endpoint, 'application/json', request.data, request.endpoint)
+    const result = await SendHTTPrequest(request.endpoint, request.method, 'application/json', request.data, request.headers, request.endpoint)
     this.response = result
+  }
+
+  openDeleteRequestConfirm () {
+    this.$vfm.show('deleteConfirmationRequestEditor')
+  }
+
+  closeDeleteRequestConfirm () {
+    this.$vfm.hide('deleteConfirmationRequestEditor')
+  }
+
+  deleteRequest () {
+    this.$vfm.hide('deleteConfirmationRequestEditor')
   }
 }
 </script>

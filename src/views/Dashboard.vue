@@ -20,7 +20,12 @@ export default class Dashboard extends Vue {
       _id: 0,
       folderName: 'Initial Folder',
       requests: [
-        { _id: 0, endpoint: '/initial_request', headers: { 'Content-Type': 'application/json' }, method: 'POST', data: { exampleField: 'example_value' } }
+        {
+          _id: 0,
+          endpoint: 'http://192.168.1.1/api/endpoint',
+          headers: { 'Content-Type': 'application/json' },
+          method: 'GET'
+        }
       ]
     }
   ]

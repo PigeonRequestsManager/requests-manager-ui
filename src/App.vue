@@ -10,9 +10,11 @@
           :key="index"
           :to="link.to"
         >
-          <div v-if="guard(link.afterAuth)">
-            {{ link.name }}
-          </div>
+          <button v-if="guard(link.afterAuth)">
+            <div>
+              {{ link.name }}
+            </div>
+          </button>
         </router-link>
       </nav>
     </div>
@@ -67,8 +69,8 @@ export default class App extends Vue {
 
 <style lang="scss">
 @import 'styles/_colors';
-@import 'styles/_inputs';
-@import 'styles/_forms';
+@import 'styles/inputs';
+@import 'styles/forms';
 @import 'styles/navigation';
 
 .body{

@@ -1,0 +1,22 @@
+.form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .formInput {
+    text-align: left;
+    input{
+      width: 300px;
+    }
+    label,
+    Field,
+    .errorMessage {
+      height: 40px;
+      display: block;
+    }
+    .errorMessage {
+      color: #d9360d;
+      justify-content: center;
+      font-size: 15px;
+    }
+  }
+}

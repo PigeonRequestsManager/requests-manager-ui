@@ -1,5 +1,10 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
+import VueFinalModal from 'vue-final-modal'
 
-createApp(App).use(router).mount('#app')
+const VueApp = createApp(App)
+
+VueApp.use(VueFinalModal())
+VueApp.use(router)
+VueApp.mount('#app')

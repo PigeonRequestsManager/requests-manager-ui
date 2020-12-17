@@ -1,4 +1,16 @@
 <template>
+  <vue-final-modal
+    v-model="showConfirm"
+    name="deleteConfirmationRequestsList"
+  >
+    <ConfirmLayout
+      :on-cancel="closeDeleteFolderConfirm"
+      :on-confirm="deleteFolder"
+      :text="'Are you sure about deleting this folder?'"
+      :confirm="'Yes'"
+      :cancel="'Cancel'"
+    />
+  </vue-final-modal>
   <div class="editor">
     <div>
       <h2 style="padding: 10px">
@@ -21,7 +33,10 @@
                   v-model="folder.folderName"
                   type="text"
                 >
-                <button @click="toggleFolder(folder._id)">
+                <button
+                  class="folderPoint"
+                  @click="toggleFolder(folder._id)"
+                >
                   <PhCaretDown
                     v-show="!foldedFolders.includes(folder._id)"
                     :size="17"
@@ -29,6 +44,14 @@
                   <PhCaretRight
                     v-show="foldedFolders.includes(folder._id)"
                     :size="17"
+                  />
+                </button>
+                <button
+                  style="margin-right: 30px"
+                  @click="openDeleteFolderConfirm(folder._id)"
+                >
+                  <PhTrashSimple
+                    :size="24"
                   />
                 </button>
               </div>
@@ -66,7 +89,7 @@
                       {{ element.endpoint.substring(0,23) }}
                     </div>
                     <button
-                      class="point"
+                      class="requestPoint"
                       @click="selectRequest(element)"
                     >
                       <PhCaretRight
@@ -92,8 +115,11 @@ import { Options, Vue } from 'vue-class-component'
 import draggable from 'vuedraggable'
 import RequestEditor from 'views/RequestEditor/RequestEditor.vue'
 import { Request } from 'components/sharedInterfaces.ts'
-import { PhCaretRight, PhCaretDown } from 'phosphor-vue3'
+import { PhCaretRight, PhCaretDown, PhTrashSimple } from 'phosphor-vue3'
+import ConfirmLayout from 'components/ConfirmLayout.vue'
+
 type RequestInFolders = {_id: number} & Request
+
 export type RequestsFolders = Array<
   {
   _id: number;
@@ -109,12 +135,15 @@ export type RequestsFolders = Array<
   components: {
     draggable,
     RequestEditor,
+    ConfirmLayout,
     PhCaretRight,
-    PhCaretDown
+    PhCaretDown,
+    PhTrashSimple
   }
 })
 
 export default class RequestsList extends Vue {
+  showConfirm = false
   requestsFolders!: RequestsFolders
   editedRequest: Request = this.requestsFolders[0].requests[0]
   foldedFolders: Array<number> = []
@@ -148,6 +177,18 @@ export default class RequestsList extends Vue {
   addNewFolder () {
     const lastId = Math.max(...this.requestsFolders.map(folder => folder._id), 0)
     this.requestsFolders.push({ _id: lastId + 1, folderName: 'New folder', requests: [{ _id: 0, endpoint: 'Initial request', method: 'POST' }] })
+  }
+
+  openDeleteFolderConfirm () {
+    this.$vfm.show('deleteConfirmationRequestsList')
+  }
+
+  closeDeleteFolderConfirm () {
+    this.$vfm.hide('deleteConfirmationRequestsList')
+  }
+
+  deleteFolder () {
+    this.$vfm.hide('deleteConfirmationRequestsList')
   }
 }
 </script>

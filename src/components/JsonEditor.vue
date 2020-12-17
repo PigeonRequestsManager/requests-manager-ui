@@ -1,7 +1,7 @@
 <template>
   <textarea
     ref="dataTextarea"
-    v-model="parsedJson"
+    v-model="parsedData"
     spellcheck="false"
     @keyup="onBodyChanged($event)"
   />
@@ -11,46 +11,62 @@
 import { Options, Vue } from 'vue-class-component'
 import { DataObject } from 'components/sharedInterfaces.ts'
 
+function providedDataParser (providedData: any) {
+  const dataType = typeof providedData
+  if (dataType !== 'undefined') {
+    switch (dataType) {
+      case 'object':
+        return JSON.stringify(providedData, null, 1)
+      case 'string':
+        return providedData
+      default:
+        return ''
+    }
+  } else {
+    return ''
+  }
+}
+
 @Options({
   props: {
-    jsonObject: Object,
-    updateJsonObject: {
+    providedData: [Object, String],
+    updateProvidedData: {
       type: Function
     }
   },
   watch: {
-    jsonObject: function () {
-      this.parsedJson = JSON.stringify(this.jsonObject, null, 1)
+    providedData: function () {
+      this.parsedData = providedDataParser(this.providedData)
     }
   }
 })
 
 export default class JsonEditor extends Vue {
   updateObject!: Function
-  jsonObject!: DataObject
-  parsedJson = ''
+  providedData!: any
+  parsedData = ''
   autoFormat = true
   $refs!: {
     dataTextarea: HTMLInputElement;
   }
 
-  updateJsonObject!: Function
+  updateProvidedData!: Function
 
   beforeMount () {
-    this.parsedJson = JSON.stringify(this.jsonObject, null, 1)
+    this.parsedData = providedDataParser(this.providedData)
   }
 
   onBodyChanged (e: DataObject) {
     if (this.autoFormat) {
       try {
         const lastCursorPosition: number = e.target.selectionStart
-        const beforeDataObject = JSON.stringify(JSON.parse(this.parsedJson), null, 1)
-        this.parsedJson = JSON.stringify(JSON.parse(this.parsedJson), null, 1)
+        const beforeDataObject = JSON.stringify(JSON.parse(this.parsedData), null, 1)
+        this.parsedData = JSON.stringify(JSON.parse(this.parsedData), null, 1)
         // Update json prop
-        if (this.updateJsonObject) {
-          this.updateJsonObject(JSON.parse(this.parsedJson))
+        if (this.updateProvidedData) {
+          this.updateProvidedData(JSON.parse(this.parsedData))
         }
-        if (beforeDataObject !== this.parsedJson) {
+        if (beforeDataObject !== this.parsedData) {
           const id = this.$refs.dataTextarea
           id.focus()
           id.setSelectionRange(lastCursorPosition - 2, lastCursorPosition - 2)

@@ -28,7 +28,9 @@
       </Form>
     </div>
     <div class="otherActions">
-      <button>Logout</button>
+      <button @click="logout">
+        Logout
+      </button>
     </div>
   </div>
 </template>
@@ -38,6 +40,7 @@ import { Options, Vue } from 'vue-class-component'
 
 import * as Yup from 'yup'
 import { Form, Field, ErrorMessage } from 'vee-validate'
+import Cookies from 'universal-cookie'
 
 @Options({
   components: {
@@ -62,13 +65,26 @@ export default class Account extends Vue {
       }
     ],
     validation: Yup.object().shape({
-      email: Yup.string().email().required(),
-      nickname: Yup.string().min(2).required()
+      email: Yup.string().email(),
+      nickname: Yup.string()
     }),
     values: {
       email: '',
       nickname: ''
     }
   }
+
+  logout () {
+    const cookies = new Cookies()
+    cookies.remove('authToken')
+    this.$router.push('Dashboard')
+  }
 }
 </script>
+
+<style scoped lang="scss">
+.otherActions {
+  margin: 10vh 0;
+  text-align: center;
+}
+</style>

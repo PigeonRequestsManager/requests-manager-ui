@@ -43,7 +43,7 @@ hr {
             padding: none;
             float: right;
             text-align: right;
-            padding: 10px;
+            padding: 6px;
             cursor: pointer;
         }
     }
@@ -62,7 +62,7 @@ hr {
         cursor: grab;
         .method,
         .endpoint,
-        .point {
+        .requestPoint {
             text-align: left;
             display: inline-block;
             padding: 5px;
@@ -73,7 +73,7 @@ hr {
         .endpoint {
             width: 200px;
         }
-        .point {
+        .requestPoint {
             background: $light_logo;
             text-align: center;
             font-size: 12px;

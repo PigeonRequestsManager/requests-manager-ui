@@ -24,12 +24,14 @@
             status5xx: response.status>=500}"
         >
           {{ response.status }}
+          -
+          {{ response.statusText }}
         </small>
       </p>
     </div>
     <!-- Actually shown json object -->
     <JsonEditor
-      :json-object="editedJson"
+      :provided-data="editedJson"
     />
   </div>
 </template>
