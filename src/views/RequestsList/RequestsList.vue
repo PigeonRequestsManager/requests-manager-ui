@@ -17,6 +17,12 @@
         Requests
       </h2>
       <div class="foldersList">
+        <input
+          v-model="requestTextToSearch"
+          class="searchBox"
+          placeholder="Search requests"
+          type="text"
+        >
         <button
           @click="addNewFolder"
         >
@@ -27,7 +33,12 @@
             v-for="(folder, index) in requestsFolders"
             :key="index"
           >
-            <div class="folder">
+            <div
+              v-if="folder.requests.filter((request) => {
+                return request.endpoint.includes(requestTextToSearch)
+              }).length > 0"
+              class="folder"
+            >
               <div class="folderName">
                 <input
                   v-model="folder.folderName"
@@ -62,7 +73,12 @@
               class="requestsList"
             >
               <!-- Add new request -->
-              <div class="request">
+              <div
+                v-if="folder.requests.filter((request) => {
+                  return request.endpoint.includes(requestTextToSearch)
+                }).length > 0"
+                class="request"
+              >
                 <button
                   @click="addNewRequest(folder._id)"
                 >
@@ -81,11 +97,16 @@
                   #item="{element}"
                   class="request"
                 >
-                  <div class="request">
+                  <div
+                    v-if="element.endpoint.includes(requestTextToSearch)"
+                    class="request"
+                  >
                     <div class="method">
                       {{ element.method }}:
                     </div>
-                    <div class="endpoint">
+                    <div
+                      class="endpoint"
+                    >
                       {{ element.endpoint.substring(0,23) }}
                     </div>
                     <button
@@ -144,12 +165,13 @@ export type RequestsFolders = Array<
 
 export default class RequestsList extends Vue {
   showConfirm = false
+  requestTextToSearch = ''
   requestsFolders!: RequestsFolders
   editedRequest: Request = this.requestsFolders[0].requests[0]
   foldedFolders: Array<number> = []
 
   private moveRequest () {
-    console.log('Przeniesiono')
+    console.log('Moved request')
   }
 
   private selectRequest (request: Request) {
@@ -194,6 +216,7 @@ export default class RequestsList extends Vue {
 </script>
 
 <style scoped lang="scss">
+  @import 'src/styles/colors.scss';
   @import './RequestsList.scss';
   .editor {
     display: flex;

@@ -9,6 +9,11 @@ hr {
     background-color: $secondary;
 }
 
+.searchBox {
+    width: 350px;
+    margin-bottom: 3vh;
+}
+
 .foldersList {
     width: 420px;
     height: 70vh;
@@ -20,6 +25,7 @@ hr {
         padding: 10px;
     }
 }
+
 .folder {
     margin-top: 20px;
     width: 380px;

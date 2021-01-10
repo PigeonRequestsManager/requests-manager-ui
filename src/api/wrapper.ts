@@ -2,7 +2,7 @@ import Cookies from 'universal-cookie'
 import { MethodsType, DataObject } from 'components/sharedInterfaces'
 import { AnyObject } from 'yup/lib/types'
 
-const API_ENDPOINT = 'piegon_api_url'
+const API_ENDPOINT = 'http://51.68.139.96/preexam/api/'
 
 const getBearerToken = async () => {
   try {
