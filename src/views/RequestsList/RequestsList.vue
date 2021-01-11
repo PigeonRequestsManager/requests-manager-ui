@@ -17,26 +17,68 @@
         Requests
       </h2>
       <div class="foldersList">
-        <input
-          v-model="requestTextToSearch"
-          class="searchBox"
-          placeholder="Search requests"
-          type="text"
-        >
+        <div class="searchBox">
+          <input
+            v-model.trim="textToSearch"
+            placeholder="Search requests and [Categories]"
+            type="text"
+            @keyup="checkWhatToSearch"
+          >
+          <button
+            v-if="textToSearch.length > 0"
+            @click="()=>{textToSearch = ''}"
+          >
+            <PhX
+              :size="21"
+            />
+          </button>
+        </div>
         <button
+          v-if="textToSearch.length === 0"
           @click="addNewFolder"
         >
           Add new folder
         </button>
+        <p v-if="textToSearch.length > 0">
+          <!-- {{ textToSearch.substring(1, textToSearch.length - 1) }} -->
+          {{ typeToSearch === 'request' ? 'Matching requests results:' : 'Matching folder results:' }}
+        </p>
+        <p
+          v-if="
+            textToSearch.length > 0 && typeToSearch === 'request' &&
+              requestsFolders.flatMap((folder)=>{
+                return folder.requests.filter((request) => {
+                  return request.endpoint.includes(textToSearch)
+                })
+              }).length === 0
+              ||
+              typeToSearch === 'folder' &&
+              textToSearch.length >= 3 &&
+              requestsFolders.filter((folder)=>{
+                return folder.folderName.includes(textToSearch.substring(1, textToSearch.length - 1))
+              }).length === 0
+          "
+          class="notfound"
+        >
+          Did not find anything 😞
+        </p>
         <ul>
           <li
             v-for="(folder, index) in requestsFolders"
             :key="index"
           >
             <div
-              v-if="folder.requests.filter((request) => {
-                return request.endpoint.includes(requestTextToSearch)
-              }).length > 0"
+              v-if="
+                textToSearch.length > 0 && typeToSearch === 'request' &&
+                  folder.requests.filter((request) => {
+                    return request.endpoint.includes(textToSearch)
+                  }).length > 0
+                  ||
+                  textToSearch.length >= 3 &&
+                  typeToSearch === 'folder' && folder.folderName.includes(textToSearch.substring(1, textToSearch.length - 1))
+                  ||
+                  textToSearch.length === 0
+              "
               class="folder"
             >
               <div class="folderName">
@@ -75,7 +117,7 @@
               <!-- Add new request -->
               <div
                 v-if="folder.requests.filter((request) => {
-                  return request.endpoint.includes(requestTextToSearch)
+                  return request.endpoint.includes(textToSearch)
                 }).length > 0"
                 class="request"
               >
@@ -98,7 +140,15 @@
                   class="request"
                 >
                   <div
-                    v-if="element.endpoint.includes(requestTextToSearch)"
+                    v-if="
+                      textToSearch.length > 0 && typeToSearch === 'request' &&
+                        element.endpoint.includes(textToSearch)
+                        ||
+                        textToSearch.length >= 3 &&
+                        typeToSearch === 'folder' && folder.folderName.includes(textToSearch.substring(1, textToSearch.length - 1))
+                        ||
+                        textToSearch.length === 0
+                    "
                     class="request"
                   >
                     <div class="method">
@@ -136,7 +186,7 @@ import { Options, Vue } from 'vue-class-component'
 import draggable from 'vuedraggable'
 import RequestEditor from 'views/RequestEditor/RequestEditor.vue'
 import { Request } from 'components/sharedInterfaces.ts'
-import { PhCaretRight, PhCaretDown, PhTrashSimple } from 'phosphor-vue3'
+import { PhCaretRight, PhCaretDown, PhTrashSimple, PhX } from 'phosphor-vue3'
 import ConfirmLayout from 'components/ConfirmLayout.vue'
 
 type RequestInFolders = {_id: number} & Request
@@ -159,13 +209,15 @@ export type RequestsFolders = Array<
     ConfirmLayout,
     PhCaretRight,
     PhCaretDown,
-    PhTrashSimple
+    PhTrashSimple,
+    PhX
   }
 })
 
 export default class RequestsList extends Vue {
   showConfirm = false
-  requestTextToSearch = ''
+  textToSearch = ''
+  typeToSearch: 'request' | 'folder' = 'request'
   requestsFolders!: RequestsFolders
   editedRequest: Request = this.requestsFolders[0].requests[0]
   foldedFolders: Array<number> = []
@@ -182,9 +234,17 @@ export default class RequestsList extends Vue {
     if (this.foldedFolders.includes(folderId)) {
       this.foldedFolders = this.foldedFolders.filter(id => id !== folderId)
     } else {
-      console.log('pushed', folderId)
-
       this.foldedFolders.push(folderId)
+    }
+  }
+
+  private checkWhatToSearch () {
+    const firstChar = this.textToSearch[0]
+    const lastChar = this.textToSearch[this.textToSearch.length - 1]
+    if (this.textToSearch.length >= 3 && firstChar === '[' && lastChar === ']') {
+      this.typeToSearch = 'folder'
+    } else {
+      this.typeToSearch = 'request'
     }
   }
 

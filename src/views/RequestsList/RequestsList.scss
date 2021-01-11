@@ -10,8 +10,25 @@ hr {
 }
 
 .searchBox {
-    width: 350px;
-    margin-bottom: 3vh;
+    height: 40px;
+    margin-bottom: 2vh;
+    display: flex;
+    > {
+        display: inline;
+    }
+    button {
+        border: none;
+    }
+    input {
+        width: 270px;
+        margin-right: 20px;
+    }
+}
+.notfound {
+    width: 240px;
+    padding: 5px 30px;
+    border-radius: 7px;
+    background: darken($logo, 7%);
 }
 
 .foldersList {
@@ -51,6 +68,9 @@ hr {
             text-align: right;
             padding: 6px;
             cursor: pointer;
+            &:active {
+                outline: none;
+            }
         }
     }
 }
