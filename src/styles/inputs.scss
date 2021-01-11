@@ -3,13 +3,13 @@
     border-width: 2px;
     border-style: solid;
     border-color: $logo;
-    background: none;
+    background: $background;
     text-underline-offset: 7px;
     &:focus {
         outline: 2px solid $light_logo;
     }
     &:disabled {
-        color: darken($primary, 40%)
+        color: darken($primary, 40%);
     }
     &.active {
         text-decoration: underline $light_logo;
@@ -30,7 +30,7 @@ button {
     cursor: pointer;
     padding: 10px 30px;
     &:disabled {
-        border-color: darken($logo, 5%)
+        border-color: darken($logo, 5%);
     }
 }
 
