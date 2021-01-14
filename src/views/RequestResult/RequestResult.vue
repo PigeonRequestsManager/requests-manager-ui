@@ -92,7 +92,7 @@ export default class RequestResult extends Vue {
 </script>
 
 <style scoped lang="scss">
-  @import 'src/styles/codeEditor.scss';
+  @import '~@/styles/codeEditor.scss';
   .status {
     background: black;
   }

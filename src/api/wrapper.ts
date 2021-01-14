@@ -38,7 +38,7 @@ const parseData = async (response: any, headers: DataObject) => {
     const data = JSON.parse(responseText)
     return data
   } catch (error) {
-    console.log('Cant parse response body to json')
+    console.warn('Cant parse response body to json')
     if (headers['content-type'] === 'image/png') {
       const blob = await responseBlob.blob()
       const data = URL.createObjectURL(blob)
@@ -77,7 +77,7 @@ const fetchMethod = (endpoint: HTTPFunctions['endpoint'], fetchConfig: DataObjec
     }
     )
     .catch((err) => {
-      console.log('error on fetch', err)
+      console.error('error on fetch - ', err)
       const res = {
         status: 503,
         statusText: 'Service Unavailable'

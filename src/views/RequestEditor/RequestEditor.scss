@@ -1,3 +1,20 @@
+@import '~@/styles/codeEditor';
+@import '~@/styles/_screenSizes';
+
+.codeEditor{
+    display: inline-block;
+    width: 55%;
+    @media (max-width: #{$tablet-width - 1px}) {
+        width: 93%;
+    }
+    @media (min-width: #{$tablet-width}) and (max-width: #{$desktop-width - 1px}) {
+        margin: 10px 1vw;
+    }
+    @media (min-width: #{$desktop-width}) {
+        margin: 10px 5vw;
+    }
+}
+
 .editorSelector {
     margin-inline: 10px;
 }
@@ -12,7 +29,7 @@
     border: none;
     padding: 10px 1px;
     border-bottom: 1px solid $primary;
-    margin-left: 40px;
+    margin-left: 2%;
     color: $primary;
     background: none;
 }
@@ -23,7 +40,7 @@
     background: none;
     color: $primary;
     border: none;
-    width: 20%;
+    width: 100px;
 }
 .actions {
     margin-inline: 20px;

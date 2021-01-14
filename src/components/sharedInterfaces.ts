@@ -14,6 +14,7 @@ export interface DataObject {
 }
 
 export type Request = {
+  _id: number;
   endpoint: string;
   method: MethodsType;
   headers?: DataObject;

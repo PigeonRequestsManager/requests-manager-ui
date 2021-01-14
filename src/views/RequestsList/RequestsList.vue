@@ -11,174 +11,173 @@
       :cancel="'Cancel'"
     />
   </vue-final-modal>
-  <div class="editor">
-    <div>
-      <h2 style="padding: 10px">
-        Requests
-      </h2>
-      <div class="foldersList">
-        <div class="searchBox">
-          <input
-            v-model.trim="textToSearch"
-            placeholder="Search requests and [Categories]"
-            type="text"
-            @keyup="checkWhatToSearch"
-          >
-          <button
-            v-if="textToSearch.length > 0"
-            @click="()=>{textToSearch = ''}"
-          >
-            <PhX
-              :size="21"
-            />
-          </button>
-        </div>
-        <button
-          v-if="textToSearch.length === 0"
-          @click="addNewFolder"
+  <div class="requestsListDisplay">
+    <h2>
+      Requests
+    </h2>
+    <div class="searchBox">
+      <input
+        v-model.trim="textToSearch"
+        placeholder="Search requests and [Categories]"
+        type="text"
+        @keyup="checkWhatToSearch"
+      >
+      <button
+        v-if="textToSearch.length > 0"
+        @click="()=>{textToSearch = ''}"
+      >
+        <PhX
+          :size="21"
+        />
+      </button>
+    </div>
+    <div class="foldersList">
+      <button
+        v-if="textToSearch.length === 0"
+        @click="addNewFolder"
+      >
+        Add new folder
+      </button>
+      <p v-if="textToSearch.length > 0">
+        {{ typeToSearch === 'request' ? 'Matching requests results:' : 'Matching folder results:' }}
+      </p>
+      <p
+        v-if="
+          textToSearch.length > 0 && typeToSearch === 'request' &&
+            requestsFolders.flatMap((folder)=>{
+              return folder.requests.filter((request) => {
+                return request.endpoint.includes(textToSearch)
+              })
+            }).length === 0
+            ||
+            typeToSearch === 'folder' &&
+            textToSearch.length >= 3 &&
+            requestsFolders.filter((folder)=>{
+              return folder.folderName.includes(textToSearch.substring(1, textToSearch.length - 1))
+            }).length === 0
+        "
+        class="notfound"
+      >
+        Did not find anything 😞
+      </p>
+      <ul>
+        <li
+          v-for="(folder, index) in requestsFolders"
+          :key="index"
         >
-          Add new folder
-        </button>
-        <p v-if="textToSearch.length > 0">
-          <!-- {{ textToSearch.substring(1, textToSearch.length - 1) }} -->
-          {{ typeToSearch === 'request' ? 'Matching requests results:' : 'Matching folder results:' }}
-        </p>
-        <p
-          v-if="
-            textToSearch.length > 0 && typeToSearch === 'request' &&
-              requestsFolders.flatMap((folder)=>{
-                return folder.requests.filter((request) => {
+          <div
+            v-if="
+              textToSearch.length > 0 && typeToSearch === 'request' &&
+                folder.requests.filter((request) => {
                   return request.endpoint.includes(textToSearch)
-                })
-              }).length === 0
-              ||
-              typeToSearch === 'folder' &&
-              textToSearch.length >= 3 &&
-              requestsFolders.filter((folder)=>{
-                return folder.folderName.includes(textToSearch.substring(1, textToSearch.length - 1))
-              }).length === 0
-          "
-          class="notfound"
-        >
-          Did not find anything 😞
-        </p>
-        <ul>
-          <li
-            v-for="(folder, index) in requestsFolders"
-            :key="index"
+                }).length > 0
+                ||
+                textToSearch.length >= 3 &&
+                typeToSearch === 'folder' && folder.folderName.includes(textToSearch.substring(1, textToSearch.length - 1))
+                ||
+                textToSearch.length === 0
+            "
+            class="folder"
           >
-            <div
-              v-if="
-                textToSearch.length > 0 && typeToSearch === 'request' &&
-                  folder.requests.filter((request) => {
-                    return request.endpoint.includes(textToSearch)
-                  }).length > 0
-                  ||
-                  textToSearch.length >= 3 &&
-                  typeToSearch === 'folder' && folder.folderName.includes(textToSearch.substring(1, textToSearch.length - 1))
-                  ||
-                  textToSearch.length === 0
-              "
-              class="folder"
-            >
-              <div class="folderName">
-                <input
-                  v-model="folder.folderName"
-                  type="text"
-                >
-                <button
-                  class="folderPoint"
-                  @click="toggleFolder(folder._id)"
-                >
-                  <PhCaretDown
-                    v-show="!foldedFolders.includes(folder._id)"
-                    :size="17"
-                  />
-                  <PhCaretRight
-                    v-show="foldedFolders.includes(folder._id)"
-                    :size="17"
-                  />
-                </button>
-                <button
-                  style="margin-right: 30px"
-                  @click="openDeleteFolderConfirm(folder._id)"
-                >
-                  <PhTrashSimple
-                    :size="24"
-                  />
-                </button>
-              </div>
-              <hr>
+            <div class="folderName">
+              <input
+                v-model="folder.folderName"
+                type="text"
+              >
+              <button
+                class="folderPoint"
+                @click="toggleFolder(folder._id)"
+              >
+                <PhCaretDown
+                  v-show="!foldedFolders.includes(folder._id)"
+                  :size="17"
+                />
+                <PhCaretRight
+                  v-show="foldedFolders.includes(folder._id)"
+                  :size="17"
+                />
+              </button>
+              <button
+                style="margin-right: 30px"
+                @click="openDeleteFolderConfirm(folder._id)"
+              >
+                <PhTrashSimple
+                  :size="24"
+                />
+              </button>
             </div>
-            <ul
-              v-if="!foldedFolders.includes(folder._id)"
-              class="requestsList"
+            <hr>
+          </div>
+          <ul
+            v-if="!foldedFolders.includes(folder._id)"
+            class="requestsList"
+          >
+            <!-- Add new request -->
+            <div
+              v-if="folder.requests.filter((request) => {
+                return request.endpoint.includes(textToSearch)
+              }).length > 0"
+              class="request"
             >
-              <!-- Add new request -->
-              <div
-                v-if="folder.requests.filter((request) => {
-                  return request.endpoint.includes(textToSearch)
-                }).length > 0"
+              <button
+                @click="addNewRequest(folder._id)"
+              >
+                Add new request
+              </button>
+            </div>
+            <draggable
+              v-model="folder.requests"
+              group="people"
+              item-key="id"
+              @start="drag=true"
+              @end="drag=false"
+              @change="moveRequest"
+            >
+              <template
+                #item="{element}"
                 class="request"
               >
-                <button
-                  @click="addNewRequest(folder._id)"
-                >
-                  Add new request
-                </button>
-              </div>
-              <draggable
-                v-model="folder.requests"
-                group="people"
-                item-key="id"
-                @start="drag=true"
-                @end="drag=false"
-                @change="moveRequest"
-              >
-                <template
-                  #item="{element}"
+                <div
+                  v-if="
+                    textToSearch.length > 0 && typeToSearch === 'request' &&
+                      element.endpoint.includes(textToSearch)
+                      ||
+                      textToSearch.length >= 3 &&
+                      typeToSearch === 'folder' && folder.folderName.includes(textToSearch.substring(1, textToSearch.length - 1))
+                      ||
+                      textToSearch.length === 0
+                  "
                   class="request"
                 >
-                  <div
-                    v-if="
-                      textToSearch.length > 0 && typeToSearch === 'request' &&
-                        element.endpoint.includes(textToSearch)
-                        ||
-                        textToSearch.length >= 3 &&
-                        typeToSearch === 'folder' && folder.folderName.includes(textToSearch.substring(1, textToSearch.length - 1))
-                        ||
-                        textToSearch.length === 0
-                    "
-                    class="request"
-                  >
-                    <div class="method">
-                      {{ element.method }}:
-                    </div>
-                    <div
-                      class="endpoint"
-                    >
-                      {{ element.endpoint.substring(0,23) }}
-                    </div>
-                    <button
-                      class="requestPoint"
-                      @click="selectRequest(element)"
-                    >
-                      <PhCaretRight
-                        :size="15"
-                      />
-                    </button>
-                    <hr>
+                  <div class="method">
+                    {{ element.method }}:
                   </div>
-                </template>
-              </draggable>
-            </ul>
-          </li>
-        </ul>
-      </div>
-      <hr>
+                  <div
+                    class="endpoint"
+                  >
+                    {{ element.endpoint.substring(0,23) }}
+                  </div>
+                  <button
+                    class="requestPoint"
+                    @click="selectRequest(element)"
+                  >
+                    <PhCaretRight
+                      :size="15"
+                    />
+                  </button>
+                  <hr>
+                </div>
+              </template>
+            </draggable>
+          </ul>
+        </li>
+      </ul>
     </div>
-    <RequestEditor :request="editedRequest" />
+    <hr>
   </div>
+  <RequestEditor
+    :request="editedRequest"
+  />
 </template>
 
 <script lang="ts">
@@ -189,18 +188,17 @@ import { Request } from 'components/sharedInterfaces.ts'
 import { PhCaretRight, PhCaretDown, PhTrashSimple, PhX } from 'phosphor-vue3'
 import ConfirmLayout from 'components/ConfirmLayout.vue'
 
-type RequestInFolders = {_id: number} & Request
-
 export type RequestsFolders = Array<
   {
   _id: number;
   folderName: string;
-  requests: Array<RequestInFolders>;
+  requests: Array<Request>;
   }
   >
 
 @Options({
   props: {
+    changeEditedRequest: Function,
     requestsFolders: Array
   },
   components: {
@@ -215,10 +213,11 @@ export type RequestsFolders = Array<
 })
 
 export default class RequestsList extends Vue {
+  requestsFolders!: RequestsFolders
+  changeEditedRequest!: Function
   showConfirm = false
   textToSearch = ''
   typeToSearch: 'request' | 'folder' = 'request'
-  requestsFolders!: RequestsFolders
   editedRequest: Request = this.requestsFolders[0].requests[0]
   foldedFolders: Array<number> = []
 
@@ -276,9 +275,6 @@ export default class RequestsList extends Vue {
 </script>
 
 <style scoped lang="scss">
-  @import 'src/styles/colors.scss';
+  @import '~@/styles/colors.scss';
   @import './RequestsList.scss';
-  .editor {
-    display: flex;
-  }
 </style>

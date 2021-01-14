@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory, NavigationGuardNext, RouteLocationNormalized, RouteRecordRaw } from 'vue-router'
-import Login from 'views/Login.vue'
-import Dashboard from 'views/Dashboard.vue'
-import Account from 'views/Account.vue'
+import Login from 'views/Login/Login.vue'
+import Dashboard from 'views/Dashboard/Dashboard.vue'
+import Account from 'views/Account/Account.vue'
 import Cookies from 'universal-cookie'
 
 function guard (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext, afterAuth = true) {
@@ -16,6 +16,8 @@ function guard (to: RouteLocationNormalized, from: RouteLocationNormalized, next
   } else {
     if (!token) {
       next()
+    } else {
+      next({ name: 'Dashboard' })
     }
   }
 }

@@ -68,10 +68,10 @@ export default class App extends Vue {
 </script>
 
 <style lang="scss">
-@import 'styles/_colors';
-@import 'styles/inputs';
-@import 'styles/forms';
-@import 'styles/navigation';
+@import '~@/styles/_colors';
+@import '~@/styles/inputs';
+@import '~@/styles/forms';
+@import '~@/styles/navigation';
 
 .body{
   @import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500&display=swap");

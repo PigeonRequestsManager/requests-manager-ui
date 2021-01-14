@@ -95,7 +95,7 @@ const EditorsArray = Object.keys(editorsDict) as EditorsType[]
 
 @Options({
   props: {
-    request: Request
+    request: Object as () => Request
   },
   watch: {
     request: function () {
@@ -180,6 +180,5 @@ export default class RequestEditor extends Vue {
 </script>
 
 <style scoped lang="scss">
-  @import 'src/styles/codeEditor.scss';
   @import './RequestEditor.scss';
 </style>

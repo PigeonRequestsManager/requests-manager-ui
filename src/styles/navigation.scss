@@ -1,8 +1,15 @@
+@import "~@/styles/_screenSizes.scss";
+
 .navigationBar {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    height: 90px;
+    @media (max-width: #{$tablet-width - 1px}) {
+        display: block;
+    }
+    @media (min-width: #{$tablet-width}) {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        height: 90px;
+    }
 
     .logoBanner {
         h1 {
@@ -14,16 +21,20 @@
     }
 
     nav {
+        display: flex;
+        justify-content: center;
         button {
             border: none;
             font-size: 15px;
         }
         a {
-            margin: 18px;
-            padding: 10px;
             display: inline-block;
             color: $primary;
-            margin-inline: 40px;
+            @media (min-width: #{$tablet-width}) {
+                margin: 18px;
+                padding: 10px;
+                margin-inline: 40px;
+            }
             &.router-link-exact-active {
                 div {
                     text-decoration: underline $light_logo;

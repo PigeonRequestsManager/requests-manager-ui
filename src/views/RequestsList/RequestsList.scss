@@ -1,4 +1,20 @@
+@import '~@/styles/_screenSizes';
 @import "src/styles/colors";
+.requestsListDisplay {
+    display: inline-block;
+    width: 25%;
+    @media (max-width: #{$tablet-width - 1px}) {
+        width: 100%;
+    }
+    @media (min-width: #{$tablet-width}) and (max-width: #{$desktop-width - 1px}) {
+        width: 40%;
+    }
+}
+
+h2 {
+    padding: 5px;
+}
+
 li {
     list-style: none;
 }
@@ -20,19 +36,23 @@ hr {
         border: none;
     }
     input {
-        width: 270px;
+        width: 100%;
         margin-right: 20px;
     }
 }
+
 .notfound {
-    width: 240px;
-    padding: 5px 30px;
+    align-self: center;
+    width: 85%;
+    margin: 0 5%;
+    padding: 5px 0;
+    text-align: center;
     border-radius: 7px;
     background: darken($logo, 7%);
 }
 
 .foldersList {
-    width: 420px;
+    width: 100%;
     height: 70vh;
     padding: 5px 5px;
     overflow: hidden;
@@ -45,7 +65,7 @@ hr {
 
 .folder {
     margin-top: 20px;
-    width: 380px;
+    width: 90%;
     justify-content: center;
     .folderName {
         height: 50px;
@@ -75,7 +95,8 @@ hr {
     }
 }
 
-.requestsList {
+ul.requestsList {
+    width: 80%;
     font-weight: 500;
     font-size: 16px;
     hr {
@@ -83,7 +104,6 @@ hr {
         background-color: $logo;
     }
     .request {
-        width: 330px;
         margin: 20px 0px;
         cursor: grab;
         .method,
@@ -94,10 +114,10 @@ hr {
             padding: 5px;
         }
         .method {
-            width: 70px;
+            width: 20%;
         }
         .endpoint {
-            width: 200px;
+            width: 52%;
         }
         .requestPoint {
             background: $light_logo;
