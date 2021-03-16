@@ -38,7 +38,7 @@
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component'
-import { DataObject, MethodsArray } from 'components/sharedInterfaces.ts'
+import { DataObject, MethodsArray } from 'components/sharedInterfaces'
 import JsonEditor from 'components/JsonEditor.vue'
 
 const editorsDict = {

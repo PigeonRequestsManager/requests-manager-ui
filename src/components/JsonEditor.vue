@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component'
-import { DataObject } from 'components/sharedInterfaces.ts'
+import { DataObject } from 'components/sharedInterfaces'
 
 function providedDataParser (providedData: any) {
   const dataType = typeof providedData

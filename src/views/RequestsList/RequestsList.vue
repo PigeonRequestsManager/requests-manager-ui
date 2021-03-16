@@ -184,7 +184,7 @@
 import { Options, Vue } from 'vue-class-component'
 import draggable from 'vuedraggable'
 import RequestEditor from 'views/RequestEditor/RequestEditor.vue'
-import { Request } from 'components/sharedInterfaces.ts'
+import { Request } from 'components/sharedInterfaces'
 import { PhCaretRight, PhCaretDown, PhTrashSimple, PhX } from 'phosphor-vue3'
 import ConfirmLayout from 'components/ConfirmLayout.vue'
 

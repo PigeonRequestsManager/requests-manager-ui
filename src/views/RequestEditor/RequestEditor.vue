@@ -1,5 +1,5 @@
 <template>
-  <vue-final-modal
+  <!-- <vue-final-modal
     v-model="showConfirm"
     name="deleteConfirmationRequestEditor"
   >
@@ -10,7 +10,7 @@
       :confirm="'Yes'"
       :cancel="'Cancel'"
     />
-  </vue-final-modal>
+  </vue-final-modal> -->
   <div class="codeEditor">
     <h2>Edit request</h2>
     <!-- Method and endpoint editor -->
@@ -76,22 +76,14 @@
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component'
-import { DataObject, MethodsArray } from 'components/sharedInterfaces.ts'
-import type { Request } from 'components/sharedInterfaces.ts'
+import { DataObject, MethodsArray } from 'components/sharedInterfaces'
+import { EditorsType, EditorsArray } from 'components/sharedEnums'
+import type { Request } from 'components/sharedInterfaces'
 import JsonEditor from 'components/JsonEditor.vue'
 import RequestResult from 'views/RequestResult/RequestResult.vue'
 import { PhTrashSimple } from 'phosphor-vue3'
 import SendHTTPrequest from 'api'
 import ConfirmLayout from 'components/ConfirmLayout.vue'
-
-const editorsDict = {
-  headers: 'headers',
-  body: 'body'
-}
-
-type EditorsType = keyof typeof editorsDict
-
-const EditorsArray = Object.keys(editorsDict) as EditorsType[]
 
 @Options({
   props: {
